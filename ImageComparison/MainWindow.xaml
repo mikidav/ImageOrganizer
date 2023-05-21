@@ -1,0 +1,149 @@
+﻿<Window x:Class="ImageComparison.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ImageComparison"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <DockPanel>
+
+        <!-- Top Panel -->
+        <Grid DockPanel.Dock="Top" Margin="10px">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="180px" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="125px" />
+                <ColumnDefinition Width="125px" />
+            </Grid.ColumnDefinitions>
+
+            <!-- First column -->
+            <Button Name="DirButton" Grid.Column="0" Cursor="Hand" Click="DirButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    
+                    <TextBlock>Choose Directory</TextBlock>
+                </StackPanel>
+            </Button>
+
+            <!-- Second column -->
+            <Label Name="DirLabel" Content="No folder selected." Grid.Column="1" BorderBrush="Black" BorderThickness="0,1" />
+
+            <Grid Name="PrgBarBlock" Grid.Column="1" Visibility="Hidden">
+                <ProgressBar Name="Progress" Value="0" BorderBrush="Black" BorderThickness="0,1" />
+                <TextBlock Name="ProgressLabel" TextAlignment="Center" Margin="0,2,0,0" FontSize="12" Height="20" HorizontalAlignment="Center"></TextBlock>
+            </Grid>
+
+            <!-- Third column -->
+            <Border Grid.Column="2" BorderBrush="Black" BorderThickness="1">
+                <Button Name="CmpButton" IsEnabled="True" Cursor="Hand" BorderThickness="0" Click="CmpButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Name="CmpButtonLabel">Start Searching</TextBlock>
+                       </StackPanel>
+                </Button>
+            </Border>
+            <Button Grid.Column="3" Content="Delete duplicate" Click="DeleteDuplicate"></Button>
+
+        </Grid>
+
+        <!-- Divider -->
+
+        <Label DockPanel.Dock="Top" Height="3" Background="#eee"/>
+
+        <!-- Lower section -->
+        <Grid DockPanel.Dock="Top">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" MinWidth="350" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="*" MinWidth="250" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Image view -->
+            <ListView Name="ImageView" Grid.Column="0" BorderThickness="0" 
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                      SelectionMode="Single" MinWidth="200"
+                      PreviewMouseLeftButtonUp="ImageView_Click"
+                      VirtualizingStackPanel.IsVirtualizing="True">
+
+                <!-- PANEL -->
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+
+                        <WrapPanel Orientation="Horizontal" Margin="0"/>
+
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <!-- GROUP -->
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+
+                                <Grid Background="#eee" Margin="0,0,1,0">
+                                    <TextBlock FontSize="14" Margin="10" Text="{Binding Name}" />
+                                </Grid>
+
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+
+                <!-- ITEM -->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Black" BorderThickness="1" Margin="0,2.5">
+                            <StackPanel Width="150" Background="Black">
+                                <Image Width="150" Height="150">
+                                    <Image.Source>
+                                        <BitmapImage DecodePixelWidth="150" UriSource="{Binding FullName}" />
+                                    </Image.Source>
+                                </Image>
+                                <StackPanel Background="#eee">
+                                    <TextBlock Text="{Binding Name}" Margin="5,5,5,2" FontSize="11" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Size}" Margin="5,0,5,5" FontSize="11" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
+            </ListView>
+
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="#eee" />
+
+            <Grid Grid.Column="2">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="250" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="*" MinHeight="150" />
+                </Grid.RowDefinitions>
+
+                <Image Name="ImgPreview" Grid.Row="0" MouseDown="ImgPreview_Click" Cursor="Hand" Margin="10" />
+
+                <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="#eee" />
+
+                <ListView Margin="10" Name="DataPreview" Grid.Row="2" d:ItemsSource="{d:SampleData ItemCount=5}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Property" Width="120" DisplayMemberBinding="{Binding Property}" />
+                            <GridViewColumn Header="Value" Width="120" DisplayMemberBinding="{Binding Value}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+
+        </Grid>
+
+    </DockPanel>
+</Window>

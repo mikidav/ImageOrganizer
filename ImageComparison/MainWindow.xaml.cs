@@ -1,0 +1,63 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using FileOrganizer;
+
+namespace ImageComparison
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+          
+        }
+
+        private void DirButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ImageView_Click(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ImgPreview_Click(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CmpButton_Click(object sender, RoutedEventArgs e)
+        {
+            FilesIterator ft = new FilesIterator();
+            var res = ft.Foo(@"D:\Code\New folder", 16, HashEnum.Difference);
+            ImageView.ItemsSource = res;
+
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(ImageView.ItemsSource);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("Group");
+            view.GroupDescriptions.Add(groupDescription);
+        }
+
+
+        private void DeleteDuplicate(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
