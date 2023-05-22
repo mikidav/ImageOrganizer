@@ -8,8 +8,16 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ExifLib" Version="1.7.0"  />
+		<PackageReference Include="EasyCode.Common" Version="1.0.0" />
+		<PackageReference Include="ExifLib" Version="1.7.0" />
 		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+	    <HintPath>..\DuplicateFilesOrginaizer\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+	    <Private>True</Private>
+	  </Reference>
 	</ItemGroup>
 
 

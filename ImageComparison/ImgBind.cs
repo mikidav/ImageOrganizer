@@ -1,12 +1,11 @@
-﻿using System.IO;
-using System;
-using System.Windows;
+﻿using System;
+using System.IO;
 using ExifLib;
 
 namespace ImageComparison;
 
 /// <summary>
-/// Class used for binders in ListView
+///     Class used for binders in ListView
 /// </summary>
 public class ImgBind
 {
@@ -34,59 +33,37 @@ public class ImgBind
         //CreatedDate = fi.CreationTime;
         //ModifiedDate = fi.LastWriteTime;
         //Length=fi.Length;
-        using (ExifReader reader = new ExifReader(fullName))
+        try
         {
+            using var reader = new ExifReader(fullName);
             // Extract the tag data using the ExifTags enumeration
             DateTime datePictureTaken;
-            if (reader.GetTagValue<DateTime>(ExifTags.DateTimeDigitized,
-                    out datePictureTaken))
-            {
+            if (reader.GetTagValue(ExifTags.DateTimeDigitized, out datePictureTaken))
                 DatePictureTaken = datePictureTaken;
-            }
 
             string cameraModel;
-            if (reader.GetTagValue(ExifTags.CameraOwnerName, out cameraModel))
-            {
-                CameraModel = cameraModel;
-            }
+            if (reader.GetTagValue(ExifTags.CameraOwnerName, out cameraModel)) CameraModel = cameraModel;
 
-            if (reader.GetTagValue(ExifTags.DateTimeOriginal, out datePictureTaken))
-            {
-                CreatedDate = datePictureTaken;
-            }
+            if (reader.GetTagValue(ExifTags.DateTimeOriginal, out datePictureTaken)) CreatedDate = datePictureTaken;
 
-            if (reader.GetTagValue(ExifTags.ImageLength, out UInt32 length))
-            {
-                Length = length;
-            }
-
-            try
-            {
-                if (reader.GetTagValue<double[]>(ExifTags.GPSLongitude, out double[] longitude))
-                {
-                    Longitude = longitude[0];
-                }
-                if (reader.GetTagValue<double[]>(ExifTags.GPSLatitude, out double[] latitude))
-                {
-                    Latitude = latitude[0];
-                }
-
-                reader.GetTagValue(ExifTags.ImageLength, out var res);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                //  throw;
-            }
+            //  if (reader.GetTagValue(ExifTags.ImageLength, out uint length)) Length = length;
+            if (reader.GetTagValue(ExifTags.ImageUniqueID, out string imageUniqueID)) ImageUniqueID = imageUniqueID;
 
 
+            if (reader.GetTagValue(ExifTags.GPSLongitude, out double[] longitude)) Longitude = longitude[0];
 
+            if (reader.GetTagValue(ExifTags.GPSLatitude, out double[] latitude)) Latitude = latitude[0];
         }
-
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            //  throw;
+        }
     }
 
-    public long Length { get; set; }
 
+    public string ImageUniqueID { get; set; }
+    public long Length { get; set; }
     public string FullName { get; set; }
     public string Name { get; set; }
     public string Group { get; set; }
@@ -99,18 +76,15 @@ public class ImgBind
     public string Resolution { get; }
     public string CameraModel { get; }
 
-    public string Size
-    {
-        get;
-        set;
-    }
+    public string Size { get; set; }
 
     public double SizeInBytes { get; set; }
 }
+
 public static class Utils
 {
     /// <summary>
-    /// Return size of file in humar readable format
+    ///     Return size of file in humar readable format
     /// </summary>
     /// <param name="path">Path to file</param>
     /// <returns>Human readable filesize</returns>
@@ -118,7 +92,7 @@ public static class Utils
     {
         string[] sizes = { "B", "KB", "MB", "GB" };
 
-        int index = 0;
+        var index = 0;
 
         while (sizeInBytes >= 1024 && index < sizes.Length - 1)
         {
@@ -126,7 +100,7 @@ public static class Utils
             sizeInBytes /= 1024;
         }
 
-        return String.Format("{0:0.##} {1}", sizeInBytes, sizes[index]);
+        return string.Format("{0:0.##} {1}", sizeInBytes, sizes[index]);
     }
 
     public static double GetFileSize(string path)
@@ -134,6 +108,5 @@ public static class Utils
         var t = new FileInfo(path);
         var len = t.Length;
         return len;
-
     }
 }
